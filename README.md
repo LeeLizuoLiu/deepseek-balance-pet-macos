@@ -6,6 +6,8 @@ A DeepSeek-chan that sits on your macOS desktop: **frameless, fully transparent,
 
 This is a native macOS rewrite of [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet) (Windows-only, WPF + `DesktopPet.exe`). It keeps the same character artwork and the same speech-bubble geometry, but needs no Windows, no .NET, and no browser.
 
+![DeepSeek Balance Pet floating above other windows on macOS](docs/preview.png)
+
 > **Note:** the pet's own UI strings — the bubble text and the right-click menu — are in Chinese, matching the original. The code and this README are in English.
 
 ## Highlights
@@ -118,6 +120,8 @@ deepseek-balance-pet-macos/
 ├── build.sh              # swiftc compile + .app assembly + self-test
 ├── assets/
 │   └── pet.png           # character artwork (from the original, 960×912, alpha-cut)
+├── docs/
+│   └── preview.png       # screenshot used by this README
 └── LICENSE
 ```
 

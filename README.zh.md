@@ -6,6 +6,8 @@
 
 这是 [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet)（Windows 专用，WPF + `DesktopPet.exe`）的 macOS 原生重写：沿用同一张人物立绘和同一套气泡几何，但不再需要 Windows、.NET 或任何浏览器。
 
+![DeepSeek 余额桌宠浮在 macOS 其他窗口之上](docs/preview.png)
+
 ## 特点
 
 - **浮在所有窗口之上**：`NSWindow.level = .floating` + `collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]`，切到任何 App、任何桌面空间、全屏应用上都看得见
@@ -116,6 +118,8 @@ deepseek-balance-pet-macos/
 ├── build.sh              # swiftc 编译 + 组装 .app + 自检
 ├── assets/
 │   └── pet.png           # 人物立绘（沿用原版，960×912，已抠白底）
+├── docs/
+│   └── preview.png       # README 用的截图
 └── LICENSE
 ```
 
