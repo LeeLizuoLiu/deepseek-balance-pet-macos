@@ -1,50 +1,54 @@
-# DeepSeek 余额桌宠 · macOS 原生版
+# DeepSeek Balance Pet · Native macOS
 
-一只挂在 macOS 桌面上的 DeepSeek 娘：**无边框、背景全透明、始终置顶**，气泡里显示你 DeepSeek 账号的实时余额，默认每 20 秒刷新一次。
+**English** | [中文](README.zh.md)
 
-这是 [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet)（Windows 专用，WPF + `DesktopPet.exe`）的 macOS 原生重写：沿用同一张人物立绘和同一套气泡几何，但不再需要 Windows、.NET 或任何浏览器。
+A DeepSeek-chan that sits on your macOS desktop: **frameless, fully transparent, always on top**, showing your live DeepSeek account balance in her speech bubble. Refreshes every 20 seconds by default.
 
-## 特点
+This is a native macOS rewrite of [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet) (Windows-only, WPF + `DesktopPet.exe`). It keeps the same character artwork and the same speech-bubble geometry, but needs no Windows, no .NET, and no browser.
 
-- **浮在所有窗口之上**：`NSWindow.level = .floating` + `collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]`，切到任何 App、任何桌面空间、全屏应用上都看得见
-- **不抢焦点**：窗口 `canBecomeKey` 恒为 `false`，输入焦点永远在原来的 App 上
-- **不占 Dock、不占菜单栏**：`LSUIElement = 1`
-- **零依赖**：只用 Xcode Command Line Tools 里的 `swiftc` 编译，没有 Xcode 工程、没有第三方库
-- **不依赖浏览器**：自己读 `~/.dsh/.credentials.yaml` 后直连 `https://api.deepseek.com/user/balance`，关掉浏览器和 Harness 也照常显示
-- 拖动、单击刷新、悬停隐藏、右键菜单、位置记忆、多显示器夹取
+> **Note:** the pet's own UI strings — the bubble text and the right-click menu — are in Chinese, matching the original. The code and this README are in English.
 
-## 环境要求
+## Highlights
 
-- macOS 13 或更高
-- Xcode Command Line Tools：`xcode-select --install`（只装了 CLT 即可，不需要完整 Xcode）
+- **Floats above everything** — `NSWindow.level = .floating` with `collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]`, so she stays visible when you switch apps, change Spaces, or go full-screen
+- **Never steals focus** — the window's `canBecomeKey` is always `false`; keyboard focus stays exactly where it was
+- **No Dock icon, no menu bar** — `LSUIElement = 1`
+- **Zero dependencies** — built with `swiftc` from Xcode Command Line Tools; no Xcode project, no third-party libraries
+- **No browser involved** — she reads `~/.dsh/.credentials.yaml` herself and talks to `https://api.deepseek.com/user/balance` directly, so she keeps working with the browser and the Harness shut down
+- Drag to move, click to refresh, hover to hide, right-click menu, remembered position, multi-display clamping
 
-## 构建
+## Requirements
+
+- macOS 13 or later
+- Xcode Command Line Tools: `xcode-select --install` (the CLT alone is enough — full Xcode is not required)
+
+## Build
 
 ```sh
-./build.sh                  # 编译 + 组装 .app + 跑一次无窗口自检
-./build.sh --run            # 顺便启动
-./build.sh --install        # 顺便安装到 ~/Applications
+./build.sh                  # compile + assemble the .app + run a headless self-test
+./build.sh --run            # ...and launch it
+./build.sh --install        # ...and install it to ~/Applications
 ```
 
-产物：`build/DeepSeekBalancePet.app`
+Output: `build/DeepSeekBalancePet.app`
 
-开机自启：把 `~/Applications/DeepSeekBalancePet.app` 拖进「系统设置 → 通用 → 登录项」。
+Launch at login: drag `~/Applications/DeepSeekBalancePet.app` into System Settings → General → Login Items.
 
-## 使用
+## Usage
 
-| 操作 | 效果 |
+| Action | Result |
 | --- | --- |
-| 左键拖动 | 移动到任意位置；位置记在 `UserDefaults`，重开仍在，窗口变小会自动夹回可视区 |
-| 单击 / 双击 | 立即刷新余额 |
-| 悬停 | 右上角出现 `×`，点一下隐藏 |
-| 右键 | 菜单：立即刷新 / 隐藏挂件 / 打开配置文件 / 退出 |
-| 隐藏后 | 原地留一个圆形 `¥` 小片，点它恢复，右键可退出 |
+| Left-drag | Move her anywhere; the position is stored in `UserDefaults` and survives restarts, and is clamped back into view when the screen shrinks |
+| Click / double-click | Refresh the balance immediately |
+| Hover | A `×` appears in the top-right corner; click it to hide |
+| Right-click | Menu: Refresh now / Hide pet / Open config file / Quit |
+| While hidden | A small round `¥` badge is left in place — click it to bring her back, right-click to quit |
 
-退出：右键 → 退出，或 `pkill -f DeepSeekBalancePet`。
+Quit: right-click → Quit, or `pkill -f DeepSeekBalancePet`.
 
-## 配置
+## Configuration
 
-首次运行会在 `~/Library/Application Support/DeepSeekBalancePet/config.json` 生成一份默认配置，改哪项覆盖哪项：
+On first run a default config is written to `~/Library/Application Support/DeepSeekBalancePet/config.json`. Set only the keys you want to change:
 
 ```json
 {
@@ -58,67 +62,67 @@
 }
 ```
 
-| 字段 | 默认值 | 说明 |
+| Key | Default | Meaning |
 | --- | --- | --- |
-| `pollSeconds` | `20` | 刷新间隔（秒），最小 5 |
-| `width` | `220` | **人物本身**的宽度（pt），高度按 960×912 自动算；投影留白额外算在外面 |
-| `currency` | `CNY` | 优先币种；填 `auto` 表示取第一个非零币种 |
-| `shadow` | `true` | 投影，对齐原版 WPF 的 `DropShadowEffect(Blur 14 / Depth 3 / Opacity 0.38)` |
-| `animation` | `true` | 轻微上下浮动（Core Animation，GPU 驱动，不占 CPU） |
-| `margin` | `16` | 默认贴边距离（右下角） |
-| `apiBase` | `https://api.deepseek.com` | 余额接口地址，可指向镜像/网关 |
+| `pollSeconds` | `20` | Refresh interval in seconds; minimum 5 |
+| `width` | `220` | Width of **the character itself** in points; height follows the 960×912 aspect ratio, and the drop-shadow padding is added on top of this |
+| `currency` | `CNY` | Preferred currency; use `auto` to pick the first non-zero entry |
+| `shadow` | `true` | Drop shadow, matching the original WPF `DropShadowEffect(Blur 14 / Depth 3 / Opacity 0.38)` |
+| `animation` | `true` | Gentle vertical bob (Core Animation, GPU-driven, no CPU cost) |
+| `margin` | `16` | Default gap from the screen edge (bottom-right) |
+| `apiBase` | `https://api.deepseek.com` | Balance endpoint; point it at a mirror or gateway if you like |
 
-右键菜单里的「打开配置文件」会直接打开它。`pollSeconds` 下次轮询即生效；几何相关项重启 App 生效。
+"Open config file" in the right-click menu opens it directly. `pollSeconds` takes effect on the next poll; anything geometry-related needs a restart.
 
-### 关于币种
+### About currency selection
 
-多币种账号的 `balance_infos` 是数组，原文取第 0 条。实测这个账号返回 `[USD:0.00, CNY:48.94]`，照抄会显示「余额：$0.00」。这里的取值顺序是：**指定币种 → 第一个非零币种 → 第一条**，所以正确显示「余额：¥48.94」。
+For multi-currency accounts, `balance_infos` is an array and the original code took index 0. This account actually returns `[USD: 0.00, CNY: 48.94]`, so copying that behaviour would display `$0.00`. The lookup order here is **requested currency → first non-zero entry → first entry**, which correctly shows `¥48.94`.
 
-## API Key
+## API key
 
-按以下顺序查找：
+Looked up in this order:
 
-1. 环境变量 `DEEPSEEK_API_KEY`
-2. `~/.dsh/.credentials.yaml` 里的 `DEEPSEEK_API_KEY` 行
+1. The `DEEPSEEK_API_KEY` environment variable
+2. The `DEEPSEEK_API_KEY` line in `~/.dsh/.credentials.yaml`
 
-也就是说，**只要你把 key 放进环境变量，这个 App 就和 DeepSeek Harness 完全无关了**。key 只在本进程内使用，只发给 `apiBase` 指向的地址。
+In other words, **put the key in your environment and this app has nothing to do with DeepSeek Harness at all.** The key is used only inside this process, and is sent only to whatever `apiBase` points at.
 
-## 自检与日志
+## Self-test and logs
 
 ```sh
-# 不开窗口，检查配置 / 凭证 / 立绘 / 余额接口四项后退出
+# Checks config, credentials, artwork and the balance endpoint, then exits without opening a window
 build/DeepSeekBalancePet.app/Contents/MacOS/DeepSeekBalancePet --selftest
 
-# 打印配置、日志、凭证文件的位置
+# Prints where the config, log and credentials files live
 build/DeepSeekBalancePet.app/Contents/MacOS/DeepSeekBalancePet --print-paths
 ```
 
-`./build.sh` 每次构建后都会自动跑一遍 `--selftest`。
+`./build.sh` runs `--selftest` automatically after every build.
 
-日志：`~/Library/Application Support/DeepSeekBalancePet/pet.log`
+Log: `~/Library/Application Support/DeepSeekBalancePet/pet.log`
 
-## 排错
+## Troubleshooting
 
-- **气泡显示「余额：获取失败」**：鼠标悬停在人物上看 tooltip 里的具体错误。常见原因是 key 失效或欠费。
-- **人物不见了**：多半是按到了 `×`。它会在原地留一个 `¥` 小圆片，点一下恢复；实在找不到就 `pkill -f DeepSeekBalancePet` 再启动一次。
-- **启动就退出**：看 `pet.log`。若提示找不到 `pet.png`，确认 `assets/pet.png` 存在（`build.sh` 会把它拷进 `.app/Contents/Resources/`）。
-- **构建报 `this SDK is not supported by the compiler`**：这是 clang 模块缓存目录不可写导致的误导性报错（不是真的 SDK 不匹配）。`build.sh` 已经把 `CLANG_MODULE_CACHE_PATH` 指到 `build/.modulecache`；若你手工调用 `swiftc`，记得加 `-module-cache-path`。
-- **第一次运行被 Gatekeeper 拦**：`build.sh` 会做 ad-hoc 签名；如果仍被拦，右键 `.app` → 打开。
+- **The bubble says `余额：获取失败` (failed to fetch)** — hover over the character to read the actual error in the tooltip. Usually an expired key or an empty account.
+- **She disappeared** — you probably hit the `×`. A small `¥` badge is left where she was; click it to restore. If you can't find it, `pkill -f DeepSeekBalancePet` and start her again.
+- **She quits immediately on launch** — check `pet.log`. If it reports a missing `pet.png`, make sure `assets/pet.png` exists (`build.sh` copies it into `.app/Contents/Resources/`).
+- **Build fails with `this SDK is not supported by the compiler`** — that is a misleading error caused by an unwritable clang module cache directory, not an actual SDK mismatch. `build.sh` already points `CLANG_MODULE_CACHE_PATH` at `build/.modulecache`; if you invoke `swiftc` by hand, pass `-module-cache-path`.
+- **Gatekeeper blocks the first launch** — `build.sh` ad-hoc signs the app; if it still gets blocked, right-click the `.app` → Open.
 
-## 目录结构
+## Layout
 
 ```
 deepseek-balance-pet-macos/
-├── BalancePet.swift      # 全部实现：窗口 / 立绘 / 气泡 / 取数 / 配置
-├── Info.plist            # LSUIElement=1，无 Dock 图标
-├── build.sh              # swiftc 编译 + 组装 .app + 自检
+├── BalancePet.swift      # everything: window / artwork / bubble / fetching / config
+├── Info.plist            # LSUIElement=1, no Dock icon
+├── build.sh              # swiftc compile + .app assembly + self-test
 ├── assets/
-│   └── pet.png           # 人物立绘（沿用原版，960×912，已抠白底）
+│   └── pet.png           # character artwork (from the original, 960×912, alpha-cut)
 └── LICENSE
 ```
 
-## 来源与许可
+## Credits and license
 
-人物立绘、气泡几何（`(70,130)-(545,300)`）、抠图与余额接口的归一化逻辑来自 [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet)（MIT，见 `LICENSE`）。
+The character artwork, the speech-bubble geometry (`(70,130)-(545,300)`), the alpha cut-out and the balance-normalization logic come from [Ho11ow8/deepseek-harness-balance-pet](https://github.com/Ho11ow8/deepseek-harness-balance-pet) (MIT — see `LICENSE`).
 
-本仓库的 AppKit 实现、多币种选择、投影烘焙、单行字号自适应与位置持久化为新增部分，同样以 MIT 发布。
+The AppKit implementation, multi-currency selection, baked drop shadow, single-line font auto-fit and position persistence in this repository are new work, released under the same MIT license.
