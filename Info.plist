@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>DeepSeekBalancePet</string>
+	<key>CFBundleIdentifier</key>
+	<string>local.deepseek.balance-pet</string>
+	<key>CFBundleName</key>
+	<string>DeepSeekBalancePet</string>
+	<key>CFBundleDisplayName</key>
+	<string>DeepSeek 余额桌宠</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<!-- Agent app: 无 Dock 图标、无菜单栏，与原版 ShowInTaskbar=false 一致 -->
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- 余额接口走 HTTPS；这里只是让将来切换到本地 HTTP 路由时不必再改 plist -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+</dict>
+</plist>
